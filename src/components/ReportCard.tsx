@@ -23,6 +23,8 @@ export const ReportCard = () => {
   const [error, setError] = useState(false);
   const [degenData, setDegenData] = useState({});
 
+  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+
   const [loading, setLoading] = useState(false);
 
   const [image, setImage] = useState("https://i.imgur.com/bmFcMj1.png");
@@ -82,13 +84,12 @@ export const ReportCard = () => {
 
   let mint = async () => {
     setLoading(true);
-    let res = await axios.post("/api/mint", {
+    await axios.post(`${BACKEND_URL}/mint`, {
       params: {
         wallet: publicKey.toString(),
       },
       data: degenData,
     });
-    if(res.data) setMintAddress(res.data.mintAddress);
     setLoading(false);
     setMinted(true);
   };

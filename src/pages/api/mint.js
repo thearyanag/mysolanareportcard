@@ -16,6 +16,9 @@ export default async function handler(req, res) {
         const degenData = req.body.data
         const { wallet } = req.body.params;
 
+        console.log("degenData", degenData)
+        console.log("wallet", wallet)
+
         let walletData = await searchNFT(wallet);
 
         if(walletData) {
@@ -24,9 +27,8 @@ export default async function handler(req, res) {
             return;
         }
 
-        let receiverAddress = wallet;
 
-        if (receiverAddress == undefined) {
+        if (wallet == undefined) {
             res.status(400).json({ error: 'Missing receiverAddress' });
             return;
         }
@@ -48,7 +50,7 @@ export default async function handler(req, res) {
         let data = JSON.stringify({
             "name": `My Report Card`,
             "image": url,
-            "receiverAddress": receiverAddress,
+            "receiverAddress": wallet,
             "attributes": degenData,
         });
 
@@ -68,7 +70,7 @@ export default async function handler(req, res) {
             console.log(error);
         });
 
-        let nftData = await searchNFT(receiverAddress);
+        let nftData = await searchNFT(wallet);
 
         const mintAddress = nftData;
         res.status(200).json({ mintAddress });

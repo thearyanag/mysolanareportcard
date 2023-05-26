@@ -13,10 +13,10 @@ const searchNFT = async (ownerAddress) => {
     };
 
     let { data } = await axios(searchConfig);
-    let mintAddress = data["results"][0].mintAddress;
+    data = data["results"][0]
 
-    if (mintAddress) {
-        return mintAddress;
+    if (data) {
+        return data.mintAddress;
     } else {
         return false;
     }

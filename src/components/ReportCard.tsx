@@ -23,6 +23,11 @@ export const ReportCard = () => {
   const [error, setError] = useState(false);
   const [degenData, setDegenData] = useState({});
 
+  
+  let novice = "https://i.imgur.com/bmFcMj1.png";
+  let intermediate = "https://i.imgur.com/s2qKwWx.png";
+  let expert = "https://i.imgur.com/oWx6DKY.png";
+
   const BACKEND_URL = "https://rcbe-production.up.railway.app"
 
   const [loading, setLoading] = useState(false);
@@ -52,7 +57,7 @@ export const ReportCard = () => {
     if (publicKey) {
       setLoading(true);
       let res = axios
-        .get("/api/getOnChainData", {
+        .get(`${BACKEND_URL}/getData`, {
           params: {
             wallet: publicKey.toString(),
           },
@@ -93,10 +98,6 @@ export const ReportCard = () => {
     setLoading(false);
     setMinted(true);
   };
-
-  let novice = "https://i.imgur.com/bmFcMj1.png";
-  let intermediate = "https://i.imgur.com/s2qKwWx.png";
-  let expert = "https://i.imgur.com/oWx6DKY.png";
 
   return (
     <HStack spacing={8}>

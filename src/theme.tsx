@@ -18,11 +18,11 @@ const theme = extendTheme({
       },
       heroGradientStart: {
         default: '#7928CA',
-        _dark: '#e3a7f9',
+        _dark: '#F9F9F9',
       },
       heroGradientEnd: {
         default: '#FF0080',
-        _dark: '#fbec8f',
+        _dark: '#FF6741',
       },
     },
     radii: {
@@ -34,6 +34,11 @@ const theme = extendTheme({
   },
   fonts,
   breakpoints,
+  background: {
+    default: '#fff',
+    _dark: '#fff',
+  },
 })
 
 export default theme
+

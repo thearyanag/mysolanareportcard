@@ -17,8 +17,6 @@ const getOnchainData = async (address) => {
 
     let nftTotal = nftStats.nftSold.volume + nftStats.nftBought.volume;
 
-
-
     let uniqueProgramInteractions = Object.keys(programsInteracted.programs).length;
     let totalInteractions = programsInteracted.total;
     let uniqueTransactionTypes = Object.keys(programsInteracted.type).length;
@@ -34,26 +32,16 @@ const getOnchainData = async (address) => {
         nftScore = 1;
     } else if (nftTotal < 100) {
         nftScore = 2;
-    } else if (nftTotal < 500) {
-        nftScore = 3;
     } else {
-        nftScore = 4;
+        nftScore = 3;
     }
 
-    if (uniqueProgramInteractions.total < 10) {
+    if (uniqueProgramInteractions < 10) {
         programScore = 1;
-    } else if (uniqueProgramInteractions.total < 20) {
+    } else if (uniqueProgramInteractions < 20) {
         programScore = 2;
     } else {
         programScore = 3;
-    }
-
-    if(uniqueTransactionTypes < 10) {
-        programScore += 0.5;
-    } else if (uniqueTransactionTypes < 20) {
-        programScore += 1;
-    } else {
-        programScore += 1.5;
     }
 
     if (stakedSol < 100) {
@@ -64,27 +52,40 @@ const getOnchainData = async (address) => {
         stakedScore = 3;
     }
 
-    if (walletage.age < 12) {
+    if (walletage < 12) {
         walletAgeScore = 1;
-    } else if (walletage.age < 24) {
+    } else if (walletage < 24) {
         walletAgeScore = 2;
     } else {
         walletAgeScore = 3;
     }
 
     if (totalInteractions < 100) {
-        walletAgeScore += 0.5;
+        programScore += 1;
     } else if (totalInteractions < 1000) {
-        walletAgeScore += 1;
+        programScore += 2;
     } else {
-        walletAgeScore += 1.5;
+        programScore += 3;
     }
 
-    let totalScore = (30*nftScore + 30*programScore + 20*stakedScore + 20*walletAgeScore)/100;
+    if (nftTotal == 0) {
+        nftScore = 0;
+    }
+    if (uniqueProgramInteractions == 0) {
+        programScore = 0;
+    }
+    if (stakedSol == 0) {
+        stakedScore = 0;
+    }
+    if (walletage == 0) {
+        walletAgeScore = 0;
+    }
+
+    let totalScore = (nftScore + programScore + stakedScore + walletAgeScore);
     console.log(totalScore);
 
     let status = 0;
-    if(totalScore < 2.5) {
+    if (totalScore < 2.5) {
         status = 1;
     } else if (totalScore < 3.5) {
         status = 2;
@@ -103,7 +104,8 @@ const getOnchainData = async (address) => {
         walletage,
         firstInteraction,
         lastInteraction,
-        status
+        status,
+        totalScore
     }
 
 }

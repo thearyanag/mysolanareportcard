@@ -31,7 +31,7 @@ const getProgramsInteracted = async (ownerAddress) => {
             type[data[i].type] += 1;
         }
 
-        lastTx = data[data.length - 1];
+        let lastTx = data[data.length - 1];
         lastSig = lastTx.signature;
     }
     

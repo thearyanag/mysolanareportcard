@@ -32,11 +32,6 @@ export const Nav = () => {
 
   const { connected } = useWallet();
 
-  useEffect(() => {
-    console.log("heyyyyy");
-  }, [connected]);
-
-
   const handleConnect = () => {
     setVisible(true);
   };

@@ -1,5 +1,12 @@
 import { Box, Badge, Image, HStack, VStack } from "@chakra-ui/react";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Link
+} from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -9,10 +16,13 @@ export const ReportCard = () => {
   const [degenScore, setDegenScore] = useState(0);
   const [activity, setActivity] = useState(0);
   const [nfts, setNfts] = useState(0);
-  const [governance, setGovernance] = useState(0);
   const [variety, setVariety] = useState(0);
   const [staking, setStaking] = useState(0);
   const [longevity, setLongevity] = useState(0);
+  const [explorer, setExplorer] = useState(0);
+  const [error, setError] = useState(false);
+  const [degenData, setDegenData] = useState({});
+  const [mintAddress, setMintAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -21,25 +31,6 @@ export const ReportCard = () => {
   const [minted, setMinted] = useState(false);
 
   const { connected, publicKey } = useWallet();
-
-  useEffect(() => {
-    if (publicKey) console.log(publicKey.toString());
-  }, [connected]);
-
-  let nftStats = async () => {
-    setLoading(true);
-    let res = await axios.get("/api/nft-stats", {
-      params: {
-        wallet: publicKey.toString(),
-      },
-    });
-    console.log(res.data);
-    setNfts(res.data.nfts);
-  };
-
-  let novice = "https://i.imgur.com/bmFcMj1.png";
-  let intermediate = "https://i.imgur.com/s2qKwWx.png";
-  let expert = "https://i.imgur.com/oWx6DKY.png";
 
   let interval = setInterval(() => {
     let random = Math.floor(Math.random() * 3) + 1;
@@ -54,10 +45,60 @@ export const ReportCard = () => {
   }, 1000);
 
   useEffect(() => {
-    if (minted) {
-      clearInterval(interval);
+    if (publicKey) {
+      setLoading(true);
+      let res = axios
+        .get("/api/getOnChainData", {
+          params: {
+            wallet: publicKey.toString(),
+          },
+        })
+        .then((res) => {
+          setLoading(false);
+          setDegenData(res.data);
+
+          setDegenScore(res.data.totalScore);
+          setNfts(res.data.nftTotal);
+          setActivity(res.data.totalInteractions);
+          setVariety(res.data.uniqueProgramInteractions);
+          setStaking(res.data.stakedSol);
+          setLongevity(res.data.walletage);
+          setExplorer(res.data.uniqueTransactionTypes);
+
+          clearInterval(interval);
+
+          if(degenScore <= 5) setImage(novice)
+          else if(degenScore <= 9) setImage(intermediate)
+          else setImage(expert)
+        })
+        .catch((err) => {
+          setLoading(false);
+          setError(true);
+        });
     }
-  }, [minted]);
+  }, [connected]);
+
+  let mint = async () => {
+    setLoading(true);
+    let res = await axios.post("/api/mint", {
+      params: {
+        wallet: publicKey.toString(),
+      },
+      data: degenData,
+    });
+    console.log(res.data.mintAddress);
+    setMintAddress(res.data.mintAddress);
+    setLoading(false);
+    setMinted(true);
+  };
+
+  let novice = "https://i.imgur.com/bmFcMj1.png";
+  let intermediate = "https://i.imgur.com/s2qKwWx.png";
+  let expert = "https://i.imgur.com/oWx6DKY.png";
+
+
+
+
 
   return (
     <HStack spacing={8}>
@@ -103,14 +144,14 @@ export const ReportCard = () => {
           <HStack>
             <Box>
               <InputGroup>
-                <InputLeftAddon children="Governance" />
-                <Input readOnly placeholder="Activity" value={governance} />
+                <InputLeftAddon children="Variety" />
+                <Input readOnly placeholder="Activity" value={variety} />
               </InputGroup>
             </Box>
             <Box>
               <InputGroup>
-                <InputLeftAddon children="Variety" />
-                <Input readOnly placeholder="Activity" value={variety} />
+                <InputLeftAddon children="Staking" />
+                <Input readOnly placeholder="Activity" value={staking} />
               </InputGroup>
             </Box>
           </HStack>
@@ -118,22 +159,61 @@ export const ReportCard = () => {
           <HStack>
             <Box>
               <InputGroup>
-                <InputLeftAddon children="Staking" />
-                <Input readOnly placeholder="Activity" value={staking} />
+                <InputLeftAddon children="Longevity" />
+                <Input readOnly placeholder="Activity" value={longevity} />
               </InputGroup>
             </Box>
             <Box>
               <InputGroup>
-                <InputLeftAddon children="Longevity" />
-                <Input readOnly placeholder="Activity" value={longevity} />
+                <InputLeftAddon children="Explorer" />
+                <Input readOnly placeholder="Activity" value={explorer} />
               </InputGroup>
             </Box>
           </HStack>
           <HStack>
             <Box>
-              <Button isLoading={loading} colorScheme="blue" color={"#000"}>
-                Mint my Report Card
-              </Button>
+              {!connected && (
+                <Alert status="error">
+                  <AlertIcon />
+                  <AlertTitle>Wallet not connected!</AlertTitle>
+                  <AlertDescription>
+                    Please connect your wallet to mint your report card.
+                  </AlertDescription>
+                </Alert>
+              )}
+              {connected && !minted && (
+                <Button
+                  isLoading={loading}
+                  colorScheme="blue"
+                  color={"#000"}
+                  onClick={mint}
+                >
+                  Mint my Report Card
+                </Button>
+              )}
+
+              {connected && minted && (
+                <Alert status="success">
+                  <AlertIcon />
+                  <AlertTitle>Report Card Minted!</AlertTitle>
+                  <AlertDescription>
+                    Your report card has been minted!
+                    <Link href={`https://xray.helius.xyz/token/${mintAddress}`}>
+                      See it here.
+                    </Link>
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {error && (
+                <Alert status="error">
+                  <AlertIcon />
+                  <AlertTitle>There was an error!</AlertTitle>
+                  <AlertDescription>
+                    Please refresh the browser.
+                  </AlertDescription>
+                </Alert>
+              )}
             </Box>
           </HStack>
         </VStack>

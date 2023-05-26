@@ -15,15 +15,15 @@ const theme = extendTheme({
   semanticTokens: {
     colors: {
       text: {
-        default: '#16161D',
+        default: '#ade3b8',
         _dark: '#ade3b8',
       },
       heroGradientStart: {
-        default: '#7928CA',
+        default: '#F9F9F9',
         _dark: '#F9F9F9',
       },
       heroGradientEnd: {
-        default: '#FF0080',
+        default: '#FF6741',
         _dark: '#FF6741',
       },
     },

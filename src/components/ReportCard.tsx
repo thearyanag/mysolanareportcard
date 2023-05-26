@@ -1,10 +1,9 @@
 import { Box, Badge, Image, HStack, VStack } from "@chakra-ui/react";
 import { Input, InputGroup, InputLeftAddon } from "@chakra-ui/react";
-import { useState , useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import axios from "axios";
-
 
 export const ReportCard = () => {
   const [degenScore, setDegenScore] = useState(0);
@@ -21,30 +20,22 @@ export const ReportCard = () => {
 
   const [minted, setMinted] = useState(false);
 
-  const { connected , publicKey} = useWallet();
+  const { connected, publicKey } = useWallet();
 
   useEffect(() => {
-    console.log(publicKey.toString());
+    if (publicKey) console.log(publicKey.toString());
   }, [connected]);
-
-  
 
   let nftStats = async () => {
     setLoading(true);
-    let res = await axios.get(
-      '/api/nft-stats',
-      {
-        params: {
-          wallet: publicKey.toString(),
-        },
-      }
-    );
+    let res = await axios.get("/api/nft-stats", {
+      params: {
+        wallet: publicKey.toString(),
+      },
+    });
     console.log(res.data);
     setNfts(res.data.nfts);
-  }
-
-  
-
+  };
 
   let novice = "https://i.imgur.com/bmFcMj1.png";
   let intermediate = "https://i.imgur.com/s2qKwWx.png";
@@ -87,7 +78,7 @@ export const ReportCard = () => {
               <InputGroup>
                 <InputLeftAddon children="Degen Score" fontSize={"2xl"} />
                 <Input
-                readOnly
+                  readOnly
                   placeholder="Degen Score"
                   value={degenScore}
                   fontSize={"2xl"}
@@ -119,7 +110,7 @@ export const ReportCard = () => {
             <Box>
               <InputGroup>
                 <InputLeftAddon children="Variety" />
-                <Input  readOnly placeholder="Activity" value={variety} />
+                <Input readOnly placeholder="Activity" value={variety} />
               </InputGroup>
             </Box>
           </HStack>
@@ -128,13 +119,13 @@ export const ReportCard = () => {
             <Box>
               <InputGroup>
                 <InputLeftAddon children="Staking" />
-                <Input  readOnly placeholder="Activity" value={staking} />
+                <Input readOnly placeholder="Activity" value={staking} />
               </InputGroup>
             </Box>
             <Box>
               <InputGroup>
                 <InputLeftAddon children="Longevity" />
-                <Input  readOnly placeholder="Activity" value={longevity} />
+                <Input readOnly placeholder="Activity" value={longevity} />
               </InputGroup>
             </Box>
           </HStack>

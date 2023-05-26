@@ -14,7 +14,6 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { BsWallet } from "react-icons/bs";
 import { RxAvatar } from "react-icons/rx";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
-import { setVisible } from '@solana/wallet-adapter-react-ui';
 
 import { useWallet } from "@solana/wallet-adapter-react";
 

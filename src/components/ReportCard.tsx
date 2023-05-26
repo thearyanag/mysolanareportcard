@@ -31,7 +31,7 @@ export const ReportCard = () => {
 
   const { connected, publicKey } = useWallet();
 
-  const [mintAddress, setMintAddress] = useState(publicKey.toString());
+  const [mintAddress, setMintAddress] = useState("");
 
 
   let interval = setInterval(() => {

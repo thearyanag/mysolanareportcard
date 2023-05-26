@@ -23,7 +23,7 @@ export const ReportCard = () => {
   const [error, setError] = useState(false);
   const [degenData, setDegenData] = useState({});
 
-  const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
+  const BACKEND_URL = "https://rcbe-production.up.railway.app"
 
   const [loading, setLoading] = useState(false);
 

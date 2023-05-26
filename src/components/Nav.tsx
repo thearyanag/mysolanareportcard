@@ -29,6 +29,11 @@ const WalletMultiButtonDynamic = dynamic(
 export const Nav = () => {
   const [icon, setIcon] = useState();
   const { setVisible } = useWalletModal();
+  const { colorMode, toggleColorMode } = useColorMode();
+
+  if (colorMode === "light") {
+    toggleColorMode();
+  }
 
   const { connected } = useWallet();
 

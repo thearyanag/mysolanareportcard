@@ -5,7 +5,7 @@ import {
   AlertIcon,
   AlertTitle,
   AlertDescription,
-  Link
+  Link,
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { Button, ButtonGroup } from "@chakra-ui/react";
@@ -22,7 +22,6 @@ export const ReportCard = () => {
   const [explorer, setExplorer] = useState(0);
   const [error, setError] = useState(false);
   const [degenData, setDegenData] = useState({});
-  const [mintAddress, setMintAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +30,9 @@ export const ReportCard = () => {
   const [minted, setMinted] = useState(false);
 
   const { connected, publicKey } = useWallet();
+
+  const [mintAddress, setMintAddress] = useState(publicKey.toString());
+
 
   let interval = setInterval(() => {
     let random = Math.floor(Math.random() * 3) + 1;
@@ -67,9 +69,9 @@ export const ReportCard = () => {
 
           clearInterval(interval);
 
-          if(degenScore <= 5) setImage(novice)
-          else if(degenScore <= 9) setImage(intermediate)
-          else setImage(expert)
+          if (degenScore <= 5) setImage(novice);
+          else if (degenScore <= 9) setImage(intermediate);
+          else setImage(expert);
         })
         .catch((err) => {
           setLoading(false);
@@ -86,8 +88,7 @@ export const ReportCard = () => {
       },
       data: degenData,
     });
-    console.log(res.data.mintAddress);
-    setMintAddress(res.data.mintAddress);
+    if(res.data) setMintAddress(res.data.mintAddress);
     setLoading(false);
     setMinted(true);
   };
@@ -95,10 +96,6 @@ export const ReportCard = () => {
   let novice = "https://i.imgur.com/bmFcMj1.png";
   let intermediate = "https://i.imgur.com/s2qKwWx.png";
   let expert = "https://i.imgur.com/oWx6DKY.png";
-
-
-
-
 
   return (
     <HStack spacing={8}>
@@ -198,7 +195,7 @@ export const ReportCard = () => {
                   <AlertTitle>Report Card Minted!</AlertTitle>
                   <AlertDescription>
                     Your report card has been minted!
-                    <Link href={`https://xray.helius.xyz/token/${mintAddress}`}>
+                    <Link href={`https://xray.helius.xyz/account/${publicKey.toString()}`}>
                       See it here.
                     </Link>
                   </AlertDescription>

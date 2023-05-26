@@ -70,9 +70,6 @@ export default async function handler(req, res) {
             console.log(error);
         });
 
-        let nftData = await searchNFT(wallet);
-
-        const mintAddress = nftData;
-        res.status(200).json({ mintAddress });
+        res.status(200);
     }
 }
